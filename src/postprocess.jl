@@ -33,36 +33,36 @@ function make_clustertree(rlons,rlats,rdeps,rorgs,rcids,qix)
     tnbranch = zeros(Int64,nclust)
     for icc in 1:nclust
         idx = findall(rcids.==icc)
-        # tlons[icc] = mean(rlons[idx])
-        # tlats[icc] = mean(rlats[idx])
-        # tdeps[icc] = mean(rdeps[idx])
-        # torgs[icc] = mean(rorgs[idx])
+        tlons[icc] = mean(rlons[idx])
+        tlats[icc] = mean(rlats[idx])
+        tdeps[icc] = mean(rdeps[idx])
+        torgs[icc] = mean(rorgs[idx])
 
         # Compute nanmean if there is a reasonable number of non-nan values
         # tlons[icc] = filter(!isnan, mean(rlons[idx]))
-        if length(filter(!isnan, rlons[idx])) <= 0.5 * length(rlons[idx])
-            tlons[icc] = mean(filter(!isnan, rlons[idx]))
-        else
-            tlons[icc] = mean(rlons[idx])
-        end
-        # tlats[icc] = filter(!isnan, mean(rlats[idx]))
-        if length(filter(!isnan, rlats[idx])) <= 0.5 * length(rlats[idx])
-            tlats[icc] = mean(filter(!isnan, rlats[idx]))
-        else
-            tlats[icc] = mean(rlats[idx])
-        end
-        # tdeps[icc] = filter(!isnan, mean(rdeps[idx]))
-        if length(filter(!isnan, rdeps[idx])) <= 0.5 * length(rdeps[idx])
-            tdeps[icc] = mean(filter(!isnan, rdeps[idx]))
-        else
-            tdeps[icc] = mean(rdeps[idx])
-        end
-        # torgs[icc] = filter(!isnan, mean(rorgs[idx]))
-        if length(filter(!isnan, rorgs[idx])) <= 0.5 * length(rorgs[idx])
-            torgs[icc] = mean(filter(!isnan, rorgs[idx]))
-        else
-            torgs[icc] = mean(rorgs[idx])
-        end
+        # if length(filter(!isnan, rlons[idx])) <= 0.5 * length(rlons[idx])
+        #     tlons[icc] = mean(filter(!isnan, rlons[idx]))
+        # else
+        #     tlons[icc] = mean(rlons[idx])
+        # end
+        # # tlats[icc] = filter(!isnan, mean(rlats[idx]))
+        # if length(filter(!isnan, rlats[idx])) <= 0.5 * length(rlats[idx])
+        #     tlats[icc] = mean(filter(!isnan, rlats[idx]))
+        # else
+        #     tlats[icc] = mean(rlats[idx])
+        # end
+        # # tdeps[icc] = filter(!isnan, mean(rdeps[idx]))
+        # if length(filter(!isnan, rdeps[idx])) <= 0.5 * length(rdeps[idx])
+        #     tdeps[icc] = mean(filter(!isnan, rdeps[idx]))
+        # else
+        #     tdeps[icc] = mean(rdeps[idx])
+        # end
+        # # torgs[icc] = filter(!isnan, mean(rorgs[idx]))
+        # if length(filter(!isnan, rorgs[idx])) <= 0.5 * length(rorgs[idx])
+        #     torgs[icc] = mean(filter(!isnan, rorgs[idx]))
+        # else
+        #     torgs[icc] = mean(rorgs[idx])
+        # end
         tnbranch[icc] = length(idx)
     end
 
@@ -250,16 +250,22 @@ function compute_bootstats(inpD,degkm,rdf,bnbM,blonM,blatM,bdepM,borgM)
                 # standard errors
                 xstd = degkm*cosd(rdf[ii,:rlat])*std(blonM[ii,:])
                 ystd = degkm*std(blatM[ii,:])
-                boot_stdH[ii]=sqrt(xstd^2+ystd^2)
-                boot_stdZ[ii]=std(bdepM[ii,:])
-                boot_stdT[ii]=std(borgM[ii,:])
+                #boot_stdH[ii]=sqrt(xstd^2+ystd^2)
+                # boot_stdZ[ii]=std(bdepM[ii,:])
+                # boot_stdT[ii]=std(borgM[ii,:])
+                boot_stdH[ii]=sqrt(filter(!isnan, xstd)^2+filter(!isnan, ystd)^2)
+                boot_stdZ[ii]=std(filter(!isnan, bdepM[ii,:]))
+                boot_stdT[ii]=std(filter(!isnan, borgM[ii,:]))
 
                 # MAD statistics (no division by 1/quantile(Normal(), 3/4) ≈ 1.4826)
                 xmad = degkm*cosd(rdf[ii,:rlat])*mad(blonM[ii,:],normalize=false)
                 ymad = degkm*mad(blatM[ii,:],normalize=false)
-                boot_madH[ii]=sqrt(xmad^2+ymad^2)
-                boot_madZ[ii]=mad(bdepM[ii,:],normalize=false)
-                boot_madT[ii]=mad(borgM[ii,:],normalize=false)
+                # boot_madH[ii]=sqrt(xmad^2+ymad^2)
+                # boot_madZ[ii]=mad(bdepM[ii,:],normalize=false)
+                # boot_madT[ii]=mad(borgM[ii,:],normalize=false)
+                boot_madH[ii]=sqrt(filter(!isnan, xstd)^2+filter(!isnan, ystd)^2)
+                boot_madZ[ii]=mad(filter(!isnan, bdepM[ii,:]),normalize=false)
+                boot_madT[ii]=mad(filter(!isnan, borgM[ii,:]),normalize=false)
 
             end
         end

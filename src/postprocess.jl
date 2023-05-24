@@ -41,25 +41,25 @@ function make_clustertree(rlons,rlats,rdeps,rorgs,rcids,qix)
         # Compute nanmean if there is a reasonable number of non-nan values
         # tlons[icc] = filter(!isnan, mean(rlons[idx]))
         if length(filter(!isnan, rlons[idx])) <= 0.5 * length(rlons[idx])
-            tlons[icc] = filter(!isnan, mean(rlons[idx]))
+            tlons[icc] = mean(filter(!isnan, rlons[idx]))
         else
             tlons[icc] = mean(rlons[idx])
         end
         # tlats[icc] = filter(!isnan, mean(rlats[idx]))
         if length(filter(!isnan, rlats[idx])) <= 0.5 * length(rlats[idx])
-            tlats[icc] = filter(!isnan, mean(rlats[idx]))
+            tlats[icc] = mean(filter(!isnan, rlats[idx]))
         else
             tlats[icc] = mean(rlats[idx])
         end
         # tdeps[icc] = filter(!isnan, mean(rdeps[idx]))
         if length(filter(!isnan, rdeps[idx])) <= 0.5 * length(rdeps[idx])
-            tdeps[icc] = filter(!isnan, mean(rdeps[idx]))
+            tdeps[icc] = mean(filter(!isnan, rdeps[idx]))
         else
             tdeps[icc] = mean(rdeps[idx])
         end
         # torgs[icc] = filter(!isnan, mean(rorgs[idx]))
         if length(filter(!isnan, rorgs[idx])) <= 0.5 * length(rorgs[idx])
-            torgs[icc] = filter(!isnan, mean(rorgs[idx]))
+            torgs[icc] = mean(filter(!isnan, rorgs[idx]))
         else
             torgs[icc] = mean(rorgs[idx])
         end

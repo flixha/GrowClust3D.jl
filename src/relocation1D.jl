@@ -83,6 +83,11 @@ function evalrms(data)
     return sqrt.(mean(data.^2))
 end
 
+function evalrmsnan(data)
+    nanrows = any(isnan(data), 2)
+    nn_data = data[!vec(nanrows), :]
+    return sqrt.(mean(nn_data.^2))
+end
 
 # DIFCLUST performs relative relocation of two clusters of events
 # (relative to the centroid of the cluster pair) using the the npr "best" 

@@ -33,10 +33,14 @@ function make_clustertree(rlons,rlats,rdeps,rorgs,rcids,qix)
     tnbranch = zeros(Int64,nclust)
     for icc in 1:nclust
         idx = findall(rcids.==icc)
-        tlons[icc] = mean(rlons[idx])
-        tlats[icc] = mean(rlats[idx])
-        tdeps[icc] = mean(rdeps[idx])
-        torgs[icc] = mean(rorgs[idx])
+        # tlons[icc] = mean(rlons[idx])
+        # tlats[icc] = mean(rlats[idx])
+        # tdeps[icc] = mean(rdeps[idx])
+        # torgs[icc] = mean(rorgs[idx])
+        tlons[icc] = filter(!isnan, mean(rlons[idx]))
+        tlats[icc] = filter(!isnan, mean(rlats[idx]))
+        tdeps[icc] = filter(!isnan, mean(rdeps[idx]))
+        torgs[icc] = filter(!isnan, mean(rorgs[idx]))
         tnbranch[icc] = length(idx)
     end
 
@@ -118,12 +122,16 @@ function compute_misfits(inpD,xdf,rdf,ttTABs)
     nss = sum(iss)
 
     # RMS
-    rmsP = evalrms(resdf[ipp,:tdif].-resdf[ipp,:pdif])
-    rmsS = evalrms(resdf[iss,:tdif].-resdf[iss,:pdif])
+    # rmsP = evalrms(resdf[ipp,:tdif].-resdf[ipp,:pdif])
+    # rmsS = evalrms(resdf[iss,:tdif].-resdf[iss,:pdif])
+    rmsP = evalrmsnan(resdf[ipp,:tdif].-resdf[ipp,:pdif])
+    rmsS = evalrmsnan(resdf[iss,:tdif].-resdf[iss,:pdif])
 
     # Mean signed residuals
-    msresP = mean(resdf[ipp,:tdif].-resdf[ipp,:pdif])
-    msresS = mean(resdf[iss,:tdif].-resdf[iss,:pdif])
+    # msresP = mean(resdf[ipp,:tdif].-resdf[ipp,:pdif])
+    # msresS = mean(resdf[iss,:tdif].-resdf[iss,:pdif])
+    msresP = mean(filter(!isnan, resdf[ipp,:tdif].-resdf[ipp,:pdif]))
+    msresS = mean(filter(!isnan, resdf[iss,:tdif].-resdf[iss,:pdif]))
 
     # print
     println("P-wave RMS: $rmsP")

@@ -30,7 +30,7 @@ export check_gcinp, check_auxparams, read_gcinp, print_input
 
 # exports from relocation
 include("relocation1D.jl")
-export evalrms, difclust1, difclust2, difclust3, robomean, clustertree, topNmeanpad
+export evalrms, evalrmsnan, difclust1, difclust2, difclust3, robomean, clustertree, topNmeanpad
 include("relocation3D.jl")
 export difclust1_3D, difclust2_3D, difclust3_3D, clustertree_3D
 
